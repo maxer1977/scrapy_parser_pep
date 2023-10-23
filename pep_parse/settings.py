@@ -7,6 +7,7 @@ NEWSPIDER_MODULE = 'pep_parse.spiders'
 
 BASE_DIR = Path(__file__).parent.parent
 DATE_FORMAT = "%Y-%m-%dT%H-%M-%S"
+HEADER = 'Статус,Количество\n'
 
 ROBOTSTXT_OBEY = True
 

@@ -1,17 +1,20 @@
 from scrapy import signals
 
 
-class PepParseSpiderMiddleware:
-    # Not all methods need to be defined. If a method is not defined,
-    # scrapy acts as if the spider middleware does not modify the
-    # passed objects.
-
+class PepParse:
     @classmethod
     def from_crawler(cls, crawler):
         # This method is used by Scrapy to create your spiders.
-        s = cls()
-        crawler.signals.connect(s.spider_opened, signal=signals.spider_opened)
-        return s
+        spider = cls()
+        crawler.signals.connect(spider.spider_opened,
+                                signal=signals.spider_opened)
+        return spider
+
+
+class PepParseSpiderMiddleware(PepParse):
+    # Not all methods need to be defined. If a method is not defined,
+    # scrapy acts as if the spider middleware does not modify the
+    # passed objects.
 
     def process_spider_input(self, response, spider):
         # Called for each response that goes through the spider
@@ -48,17 +51,10 @@ class PepParseSpiderMiddleware:
         spider.logger.info('Spider opened: %s' % spider.name)
 
 
-class PepParseDownloaderMiddleware:
+class PepParseDownloaderMiddleware(PepParse):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
     # passed objects.
-
-    @classmethod
-    def from_crawler(cls, crawler):
-        # This method is used by Scrapy to create your spiders.
-        s = cls()
-        crawler.signals.connect(s.spider_opened, signal=signals.spider_opened)
-        return s
 
     def process_request(self, request, spider):
         # Called for each request that goes through the downloader

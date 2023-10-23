@@ -1,6 +1,8 @@
 import datetime as dt
 
-from settings import BASE_DIR, DATE_FORMAT
+from scrapy.exceptions import DropItem
+
+from .settings import BASE_DIR, DATE_FORMAT, HEADER
 
 
 class PepParsePipeline:
@@ -11,9 +13,15 @@ class PepParsePipeline:
         self.total = 0
 
     def open_spider(self, spider):
+        # pytest ругается на отсутствие этого метода
+        # поэтому оставил...
         pass
 
     def process_item(self, item, spider):
+        # Проверяем наличие значения статуса в Item
+        if item['status'] is None:
+            raise DropItem('В Item отсутствует значение статуса!')
+
         # Считаем количество для каждого статуса.
         if item['status'] in self.items:
             self.items[item['status']] += 1
@@ -44,7 +52,7 @@ class PepParsePipeline:
         with open(file_path, mode='w', encoding='utf-8') as f:
             # Записываем строки в csv-файл. Колонки разделяются запятой,
             # без пробелов.
-            f.write('Статус,Количество\n')
+            f.write(HEADER)
             for key, value in self.items.items():
                 f.write(f'{key}, {value}\n')
             # Запись итоговой строки
