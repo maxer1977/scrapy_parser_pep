@@ -18,8 +18,8 @@ class PepParsePipeline:
         pass
 
     def process_item(self, item, spider):
-        # Проверяем наличие значения статуса в Item
-        if item['status'] is None:
+        # Проверяем наличие записи о статусе в Item
+        if 'status' not in item:
             raise DropItem('В Item отсутствует значение статуса!')
 
         # Считаем количество для каждого статуса.
